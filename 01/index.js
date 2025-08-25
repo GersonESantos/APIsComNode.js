@@ -1,8 +1,12 @@
 // Importa o módulo Express para usar suas funcionalprecos 
 const express = require("express");
 
+const cors = require('cors');
+
 // Cria uma instância do aplicativo Express
 const app = express();
+
+app.use(cors());
 
 
 // Ter acesso ao body (json) nas requisições POST, PUT e PATCH
