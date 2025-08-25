@@ -48,7 +48,7 @@ app.get('/:codigo', (req, res) => {
 });
 
 // Rota para cadastrar produtos   
-app('/', (req, res) => {
+app.post('/', (req, res) => {
   // Extrair as características do objeto
   const { nome, preco, cpreco } = req.body;
 
