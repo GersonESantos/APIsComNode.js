@@ -4,11 +4,6 @@ const express = require("express");
 // Cria uma instância do aplicativo Express
 const app = express();
 
-
-// Ter acesso ao body (json) nas requisições POST, PUT e PATCH
-app.use(express.json());
-
-
 // Vetor de produtos com código, nome, preco e cpreco
 let produtos = [
   { "codigo": 1, "nome": "Ana Souza", "preco": 28, "cpreco": "São Paulo" },
@@ -24,8 +19,7 @@ let produtos = [
 ];
 
  
-// Índice cadastro
-let indiceCadastro = 11;
+
 
 app.get('/', (req, res) => {
   res.status(200).json(produtos);
@@ -46,36 +40,6 @@ app.get('/:codigo', (req, res) => {
     res.status(404).json({mensagem:'produto não encontrada.'});
   }
 });
-
-// Rota para cadastrar produtos   
-app('/', (req, res) => {
-  // Extrair as características do objeto
-  const { nome, preco, cpreco } = req.body;
-
-  // Caso o nome, preco ou cpreco não sejam informados, retorna um status 400
-  if (!nome || !preco || !cpreco) {
-    return res.status(400).json({ mensagem: "Nome, preco e cpreco são obrigatórios." });
-  }
-
-  // Criar nova produto
-  const novaproduto = {
-    codigo: indiceCadastro,
-    nome,
-    preco,
-    cpreco
-  };
-
-  // Incrementar variável indiceCadastro
-  indiceCadastro++;
-
-  // Adicionar ao vetor
-  produtos.push(novaproduto);
-
-  // Retornar a nova produto
-  res.status(201).json(novaproduto);
-});
-
-
 // Executa o projeto na porta especificada 
 app.listen(8080, () => {
     console.log('Servidor rodando em http://localhost:8080');
