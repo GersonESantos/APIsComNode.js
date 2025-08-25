@@ -45,7 +45,7 @@ router.get('/:codigo', (req, res) => {
   if(produto){
     res.status(200).json(produto);
   }else{
-    res.status(404).json({mensagem:'Produto não encontrado.'});
+    res.status(404).json({mensagem:'produto não encontrada.'});
   }
 });
 
@@ -56,7 +56,7 @@ router.post('/', (req, res) => {
 
   // Caso o nome, preco ou cpreco não sejam informados, retorna um status 400
   if (!nome || !preco || !cpreco) {
-    return res.status(400).json({ mensagem: "Nome, preço e cidade são obrigatórios." });
+    return res.status(400).json({ mensagem: "Nome, preco e cpreco são obrigatórios." });
   }
 
   // Criar nova produto
@@ -87,7 +87,7 @@ router.put('/:codigo', (req, res) => {
 
   // Caso não encontrar a produto
   if (indiceproduto == -1) {
-    return res.status(404).json({ mensagem: 'Produto não encontrado.' });
+    return res.status(404).json({ mensagem: 'produto não encontrada.' });
   }
 
   // Extrair as características do objeto enviado
@@ -95,7 +95,7 @@ router.put('/:codigo', (req, res) => {
 
   // Caso o nome, preco ou cpreco não sejam informados, retorna um status 400
   if (!nome || !preco || !cpreco) {
-    return res.status(400).json({ mensagem: 'Nome, preço e cidade são obrigatórios para PUT.' });
+    return res.status(400).json({ mensagem: 'Nome, preco e cpreco são obrigatórios para PUT.' });
   }
 
   // Criar nova produto
@@ -145,14 +145,14 @@ router.delete('/:codigo', (req, res) => {
 
   // Caso não encontrar a produto
   if (indiceproduto == -1) {
-    return res.status(404).json({ mensagem: 'Produto não encontrado.' });
+    return res.status(404).json({ mensagem: 'produto não encontrada.' });
   }
 
   // Remover produto
   produtos.splice(indiceproduto, 1);
 
   // Retornar mensagem, informando que a produto foi removida
-  res.status(200).json({ mensagem: 'Produto removido com sucesso.'});
+  res.status(200).json({ mensagem: 'produto removida com sucesso.'});
 });
 
 
@@ -162,3 +162,5 @@ router.delete('/:codigo', (req, res) => {
 
 // Exportar rotas
 module.exports = router;
+
+
