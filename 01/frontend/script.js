@@ -1,83 +1,83 @@
-// const API_URL = 'https://front-pessoa-et5n.onrender.com/';
-const API_URL = 'http://localhost:5500/pessoaMongo';
-// Carrega as pessoas automaticamente ao iniciar
+// const API_URL = 'https://front-produto-et5n.onrender.com/';
+const API_URL = 'http://localhost:5500/produtosMongo';
+// Carrega as produtos automaticamente ao iniciar
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('listarBtn').addEventListener('click', carregarPessoas);
+  document.getElementById('listarBtn').addEventListener('click', carregarprodutos);
 });
 
-async function carregarPessoas() {
+async function carregarprodutos() {
   try {
     const res = await fetch(API_URL);
-    const pessoas = await res.json();
-    const tbody = document.querySelector('#tabelaPessoas tbody');
+    const produtos = await res.json();
+    const tbody = document.querySelector('#tabelaprodutos tbody');
     tbody.innerHTML = '';
 
-    if (pessoas.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5">Nenhuma pessoa encontrada.</td></tr>';
+    if (produtos.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5">Nenhuma produto encontrada.</td></tr>';
       return;
     }
 
-    pessoas.forEach(p => {
+    produtos.forEach(p => {
       const tr = document.createElement('tr');
 
       tr.innerHTML = `
         <td>${p._id}</td>
         <td>${p.nome}</td>
-        <td>${p.idade}</td>
-        <td>${p.cidade}</td>
+        <td>${p.preco}</td>
+        <td>${p.cpreco}</td>
         <td>
-          <button onclick="editarPessoa('${p._id}')">Editar</button>
-          <button onclick="excluirPessoa('${p._id}')">Excluir</button>
+          <button onclick="editarproduto('${p._id}')">Editar</button>
+          <button onclick="excluirproduto('${p._id}')">Excluir</button>
         </td>
       `;
       tbody.appendChild(tr);
     });
   } catch (err) {
-    alert('Erro ao carregar pessoas.');
+    alert('Erro ao carregar produtos.');
     console.error(err);
   }
 }
 
-async function editarPessoa(id) {
+async function editarproduto(id) {
   try {
     const res = await fetch(`${API_URL}/${id}`);
-    const pessoa = await res.json();
+    const produto = await res.json();
 
-    document.getElementById('id').value = pessoa._id;
-    document.getElementById('nome').value = pessoa.nome;
-    document.getElementById('idade').value = pessoa.idade;
-    document.getElementById('cidade').value = pessoa.cidade;
+    document.getElementById('id').value = produto._id;
+    document.getElementById('nome').value = produto.nome;
+    document.getElementById('preco').value = produto.preco;
+    document.getElementById('cpreco').value = produto.cpreco;
   } catch (err) {
-    alert('Erro ao carregar dados da pessoa.');
+    alert('Erro ao carregar dados da produto.');
     console.error(err);
   }
 }
 
-async function excluirPessoa(id) {
-  if (!confirm('Tem certeza que deseja excluir esta pessoa?')) return;
+async function excluirproduto(id) {
+  if (!confirm('Tem certeza que deseja excluir esta produto?')) return;
 
   try {
     const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
     if (res.ok) {
-      carregarPessoas();
+      carregarprodutos();
     } else {
-      alert('Erro ao excluir pessoa.');
+      alert('Erro ao excluir produto.');
     }
   } catch (err) {
-    alert('Erro ao excluir pessoa.');
+    alert('Erro ao excluir produto.');
     console.error(err);
   }
 }
 
-document.getElementById('pessoaForm').addEventListener('submit', async (e) => {
+document.getElementById('produtoForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const id = document.getElementById('id').value;
   const nome = document.getElementById('nome').value.trim();
-  const idade = parseInt(document.getElementById('idade').value.trim());
-  const cidade = document.getElementById('cidade').value.trim();
+  const preco = parseInt(document.getElementById('preco').value.trim());
+  const cpreco = document.getElementById('cpreco').value.trim();
 
-  const pessoa = { nome, idade, cidade };
+  const produto = { nome, preco, cpreco };
 
   try {
     let res;
@@ -87,26 +87,26 @@ document.getElementById('pessoaForm').addEventListener('submit', async (e) => {
       res = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pessoa)
+        body: JSON.stringify(produto)
       });
     } else {
       // Criar
       res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pessoa)
+        body: JSON.stringify(produto)
       });
     }
 
     if (res.ok) {
-      document.getElementById('pessoaForm').reset();
+      document.getElementById('produtoForm').reset();
       document.getElementById('id').value = '';
-      carregarPessoas(); // Atualiza a tabela após salvar
+      carregarprodutos(); // Atualiza a tabela após salvar
     } else {
-      alert('Erro ao salvar pessoa.');
+      alert('Erro ao salvar produto.');
     }
   } catch (err) {
-    alert('Erro ao salvar pessoa.');
+    alert('Erro ao salvar produto.');
     console.error(err);
   }
 });
