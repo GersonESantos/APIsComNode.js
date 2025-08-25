@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Produtos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>Lista de Produtos</h1>
+    <table id="tabela-produtos">
+        <thead>
+            <tr>
+                <thó
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                digo</th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Cpreco</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+    fetch('/produto')
+        .then(response => response.json())
+        .then(produtos => {
+            const tbody = document.querySelector('#tabela-produtos tbody');
+            tbody.innerHTML = '';
+            produtos.forEach(produto => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${produto.codigo}</td>
+                    <td>${produto.nome}</td>
+                    <td>${produto.preco}</td>
+                    <td>${produto.cpreco}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(() => {
+            const tbody = document.querySelector('#tabela-produtos tbody');
+            tbody.innerHTML = '<tr><td colspan="4">Erro ao carregar dados.</td></tr>';
+        });
+    </script>
+</body>
+</html>
