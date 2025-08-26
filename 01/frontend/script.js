@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const apiUrl = '/produto'; // A API será servida no mesmo host
+    const apiUrl = 'http://localhost:8080/produto'; // A API será servida no mesmo host
  
     const formAdicionar = document.getElementById('form-adicionar');
-    const tabelaPessoasBody = document.querySelector('#tabela-pessoas tbody');
+    const tabelaprodutosBody = document.querySelector('#tabela-produtos tbody');
  
     // Modal de edição
     const modalEditar = document.getElementById('modal-editar');
@@ -10,45 +10,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalButton = document.querySelector('.close-button');
     const idEditInput = document.getElementById('id-edit');
     const nomeEditInput = document.getElementById('nome-edit');
-    const idadeEditInput = document.getElementById('idade-edit');
-    const cidadeEditInput = document.getElementById('cidade-edit');
+    const precoEditInput = document.getElementById('preco-edit');
+    const cprecoEditInput = document.getElementById('cpreco-edit');
  
-    // Função para buscar e renderizar as pessoas
-    async function fetchAndRenderPessoas() {
+    // Função para buscar e renderizar as produtos
+    async function fetchAndRenderprodutos() {
         try {
             const response = await fetch(apiUrl);
             if (!response.ok) {
-                throw new Error('Erro ao buscar pessoas');
+                throw new Error('Erro ao buscar produtos');
             }
-            const pessoas = await response.json();
-            renderPessoas(pessoas);
+            const produtos = await response.json();
+            renderprodutos(produtos);
         } catch (error) {
             console.error('Erro:', error);
-            tabelaPessoasBody.innerHTML = `<tr><td colspan="5">Erro ao carregar dados. Verifique se o servidor está rodando.</td></tr>`;
+            tabelaprodutosBody.innerHTML = `<tr><td colspan="5">Erro ao carregar dados. Verifique se o servidor está rodando.</td></tr>`;
         }
     }
  
-    // Função para renderizar a tabela de pessoas
-    function renderPessoas(pessoas) {
-        tabelaPessoasBody.innerHTML = ''; // Limpa a tabela antes de renderizar
-        if (pessoas.length === 0) {
-            tabelaPessoasBody.innerHTML = `<tr><td colspan="5">Nenhuma pessoa cadastrada.</td></tr>`;
+    // Função para renderizar a tabela de produtos
+    function renderprodutos(produtos) {
+        tabelaprodutosBody.innerHTML = ''; // Limpa a tabela antes de renderizar
+        if (produtos.length === 0) {
+            tabelaprodutosBody.innerHTML = `<tr><td colspan="5">Nenhuma produto cadastrada.</td></tr>`;
             return;
         }
  
-        pessoas.forEach(pessoa => {
+        produtos.forEach(produto => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${pessoa._id}</td>
-                <td>${pessoa.nome}</td>
-                <td>${pessoa.idade}</td>
-                <td>${pessoa.cidade}</td>
+                <td>${produto._id}</td>
+                <td>${produto.nome}</td>
+                <td>${produto.preco}</td>
+                <td>${produto.cpreco}</td>
                 <td class="action-buttons">
-                    <button class="edit-btn" data-id="${pessoa._id}">Editar</button>
-                    <button class="delete-btn" data-id="${pessoa._id}">Excluir</button>
+                    <button class="edit-btn" data-id="${produto._id}">Editar</button>
+                    <button class="delete-btn" data-id="${produto._id}">Excluir</button>
                 </td>
             `;
-            tabelaPessoasBody.appendChild(tr);
+            tabelaprodutosBody.appendChild(tr);
         });
     }
  
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
  
         const nome = document.getElementById('nome-add').value;
-        const idade = document.getElementById('idade-add').value;
-        const cidade = document.getElementById('cidade-add').value;
+        const preco = document.getElementById('preco-add').value;
+        const cpreco = document.getElementById('cpreco-add').value;
  
         try {
             const response = await fetch(apiUrl, {
@@ -66,40 +66,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ nome, idade, cidade }),
+                body: JSON.stringify({ nome, preco, cpreco }),
             });
  
             if (!response.ok) {
-                throw new Error('Erro ao cadastrar pessoa');
+                throw new Error('Erro ao cadastrar produto');
             }
  
             formAdicionar.reset(); // Limpa o formulário
-            fetchAndRenderPessoas(); // Atualiza a tabela
+            fetchAndRenderprodutos(); // Atualiza a tabela
         } catch (error) {
             console.error('Erro ao adicionar:', error);
-            alert('Não foi possível cadastrar a pessoa.');
+            alert('Não foi possível cadastrar a produto.');
         }
     });
  
     // Event listener para os botões de editar e excluir (usando delegação de eventos)
-    tabelaPessoasBody.addEventListener('click', async (event) => {
+    tabelaprodutosBody.addEventListener('click', async (event) => {
         const target = event.target;
  
         // Botão de Excluir
         if (target.classList.contains('delete-btn')) {
             const id = target.dataset.id;
-            if (confirm(`Tem certeza que deseja excluir a pessoa com ID ${id}?`)) {
+            if (confirm(`Tem certeza que deseja excluir a produto com ID ${id}?`)) {
                 try {
                     const response = await fetch(`${apiUrl}/${id}`, {
                         method: 'DELETE',
                     });
                     if (response.status !== 204) { // DELETE bem-sucedido retorna 204
-                        throw new Error('Erro ao excluir pessoa');
+                        throw new Error('Erro ao excluir produto');
                     }
-                    fetchAndRenderPessoas(); // Atualiza a tabela
+                    fetchAndRenderprodutos(); // Atualiza a tabela
                 } catch (error) {
                     console.error('Erro ao excluir:', error);
-                    alert('Não foi possível excluir a pessoa.');
+                    alert('Não foi possível excluir a produto.');
                 }
             }
         }
@@ -109,14 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = target.dataset.id;
             try {
                 const response = await fetch(`${apiUrl}/${id}`);
-                if (!response.ok) throw new Error('Pessoa não encontrada');
-                const pessoa = await response.json();
+                if (!response.ok) throw new Error('produto não encontrada');
+                const produto = await response.json();
                 
-                // Preenche o modal com os dados da pessoa
-                idEditInput.value = pessoa._id;
-                nomeEditInput.value = pessoa.nome;
-                idadeEditInput.value = pessoa.idade;
-                cidadeEditInput.value = pessoa.cidade;
+                // Preenche o modal com os dados da produto
+                idEditInput.value = produto._id;
+                nomeEditInput.value = produto.nome;
+                precoEditInput.value = produto.preco;
+                cprecoEditInput.value = produto.cpreco;
  
                 // Exibe o modal
                 modalEditar.style.display = 'block';
@@ -131,25 +131,25 @@ document.addEventListener('DOMContentLoaded', () => {
     formEditar.addEventListener('submit', async (event) => {
         event.preventDefault();
         const id = idEditInput.value;
-        const pessoaAtualizada = {
+        const produtoAtualizada = {
             nome: nomeEditInput.value,
-            idade: parseInt(idadeEditInput.value, 10),
-            cidade: cidadeEditInput.value,
+            preco: parseInt(precoEditInput.value, 10),
+            cpreco: cprecoEditInput.value,
         };
  
         try {
             const response = await fetch(`${apiUrl}/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pessoaAtualizada),
+                body: JSON.stringify(produtoAtualizada),
             });
-            if (!response.ok) throw new Error('Erro ao atualizar pessoa');
+            if (!response.ok) throw new Error('Erro ao atualizar produto');
             
             modalEditar.style.display = 'none'; // Esconde o modal
-            fetchAndRenderPessoas(); // Atualiza a tabela
+            fetchAndRenderprodutos(); // Atualiza a tabela
         } catch (error) {
             console.error('Erro ao atualizar:', error);
-            alert('Não foi possível atualizar os dados da pessoa.');
+            alert('Não foi possível atualizar os dados da produto.');
         }
     });
  
@@ -164,5 +164,5 @@ document.addEventListener('DOMContentLoaded', () => {
     };
  
     // Carrega os dados iniciais
-    fetchAndRenderPessoas();
+    fetchAndRenderprodutos();
 });
