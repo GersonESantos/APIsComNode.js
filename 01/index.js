@@ -19,10 +19,10 @@ app.use(express.json());
 
 // Importa as rotas definidas em produto.js
 const produtoRouter = require('./rotas/produto');
-
+const produtoMongoRouter = require('./rotas/produtoMongo');
 // Usa o router definido para o caminho "/produto"
 app.use('/produto', produtoRouter);
-
+app.use('/produtoMongo', produtoMongoRouter);
 
 // Chamar a função `conectarMongo()` para estabelecer a conexão
 conectarMongo().then(() => {
