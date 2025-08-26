@@ -3,6 +3,9 @@ const express = require("express");
 
 const cors = require('cors');
 
+// Importando a função `conectarMongo` do arquivo `conexao/mongo.js`
+const { conectarMongo } = require('./conexao/mongo');
+
 // Cria uma instância do aplicativo Express
 const app = express();
 
@@ -21,9 +24,16 @@ const produtoRouter = require('./rotas/produto');
 app.use('/produto', produtoRouter);
 
 
-
+// Chamar a função `conectarMongo()` para estabelecer a conexão
+conectarMongo().then(() => {
+  
+  // Após a conexão com o MongoDB ser bem-sucedida, o servidor Express é iniciado
+  app.listen(8080, () => console.log('Servidor rodando na porta 8080'));
+  
+}).catch(err => {
+  // Caso ocorra algum erro durante a conexão com o MongoDB ou ao iniciar o servidor,
+  console.error('Erro ao conectar ao MongoDB ou iniciar o servidor:', err);
+});
 
 // Executa o projeto na porta especificada 
-app.listen(8080, () => {
-    console.log('Servidor rodando em http://localhost:8080');
-});
+

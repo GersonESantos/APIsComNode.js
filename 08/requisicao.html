@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+------<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Produtos</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { width: 50%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <h1>Produtos</h1>
+    <table id="produtos-tabela">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Os dados dos produtos serão inseridos aqui via JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Assumindo que sua API está rodando em http://localhost:PORTA/produtos
+        // Ajuste a URL e a porta se for diferente.
+        const apiUrl = 'http://localhost:8080/produto'; // Usando caminho relativo
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tabelaBody = document.querySelector('#produtos-tabela tbody');
+                // Limpa a tabela antes de adicionar novos dados
+                tabelaBody.innerHTML = ''; 
+                
+                data.forEach(produto => {
+                    const linha = document.createElement('tr');
+                    // Formata o preço para o padrão monetário brasileiro
+                    const precoFormatado = produto.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                    linha.innerHTML = `
+                        <td>${produto.nome}</td>
+                        <td>${precoFormatado}</td>
+                    `;
+                    tabelaBody.appendChild(linha);
+                });
+            })
+            .catch(error => {
+                console.error('Falha ao buscar produtos:', error);
+                const tabelaBody = document.querySelector('#produtos-tabela tbody');
+                const linhaErro = document.createElement('tr');
+                linhaErro.innerHTML = `<td colspan="2">Não foi possível carregar os produtos. Verifique o console para mais detalhes.</td>`;
+                tabelaBody.appendChild(linhaErro);
+            });
+    </script>
+
+</body>
+</html>
