@@ -2,13 +2,13 @@
 const { MongoClient } = require('mongodb');
 
 // Conexão com o MongoDB, usando o MongoDB Atlas (nuvem).
-const uri = 'mongodb+srv://gebhsantos:A3YG8lXShNUS7FUw@cluster0.kblbkig.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const uri = 'mongodb+srv://gebhsantos:YPYS8bRSD7NPbRKp@cluster0.kblbkig.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 // Criando uma instância do MongoClient, que será usada para estabelecer a conexão com o banco de dados.
 const client = new MongoClient(uri);
 
-// Variável para armazenar a coleção 'pessoas' que será usada nas operações CRUD.
-let pessoasCollection;
+// Variável para armazenar a coleção 'produtos' que será usada nas operações CRUD.
+let produtosCollection;
 
 // Função assíncrona para conectar ao MongoDB.
 async function conectarMongo() {
@@ -18,9 +18,9 @@ async function conectarMongo() {
     
     // Após a conexão bem-sucedida, acessamos o banco de dados 'api_db'.
     const db = client.db('api_db');
-    
-    // Agora que temos o banco de dados, acessamos a coleção 'pessoas' e armazenamos em `pessoasCollection` para uso posterior.
-    pessoasCollection = db.collection('pessoas');
+
+    // Agora que temos o banco de dados, acessamos a coleção 'produtos' e armazenamos em `produtosCollection` para uso posterior.
+    produtosCollection = db.collection('produtos');
     
     // Exibimos uma mensagem no console caso a conexão seja bem-sucedida.
     console.log('MongoDB conectado com sucesso!');
@@ -30,17 +30,16 @@ async function conectarMongo() {
   }
 }
 
-// Função para obter a coleção 'pessoas' após a conexão com o MongoDB.
-function getPessoasCollection() {
+// Função para obter a coleção 'produtos' após a conexão com o MongoDB.
+function getprodutosCollection() {
   // Se a coleção não foi definida (caso a conexão não tenha ocorrido com sucesso),
-  if (!pessoasCollection) {
+  if (!produtosCollection) {
     throw new Error('Coleção não conectada.');
   }
   
-  // Se a coleção foi conectada, retornamos o objeto da coleção 'pessoas',
-  return pessoasCollection;
+  // Se a coleção foi conectada, retornamos o objeto da coleção 'produtos',
+  return produtosCollection;
 }
 
-// Exportamos as funções para que possam ser usadas em outros arquivos do projeto,
-// especialmente nas rotas onde precisaremos interagir com a coleção 'pessoas' no MongoDB.
-module.exports = { conectarMongo, getPessoasCollection };
+// Exportando as funções para que possam ser usadas em outras partes do código.
+module.exports = { conectarMongo, getprodutosCollection };
